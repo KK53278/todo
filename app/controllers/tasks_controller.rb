@@ -36,6 +36,16 @@ class TasksController < ApplicationController
     redirect_to root_path, status: :see_other
   end
 
+  def toggle
+    @task = Task.find(params[:id])
+    @task.update(completed: !@task.completed)
+      render turbo_stream: turbo_stream.replace(
+        @task,
+        partial: 'completed',
+        locals: { task: @task}
+        )
+  end
+
   private
   def task_params
     params.require(:task).permit(:title)
